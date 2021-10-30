@@ -9,31 +9,45 @@ void arrayPrint(int array[], int size) {
     printf("%d\n", array[last]);
 }
 
-int partition(int array[], int array_clean[], int start, int end) {
-    int average = (start + end) / 2;
-    int elem = array[average];
+int partition(int array[], int start, int end) {
+    int avg = (start + end) / 2;
+    int pivot = array[avg];
+    int tail = start;
 
-    // TODO
-    // 1. Записать в массив array_clean значения меньшие чем elem
-    // 2. Записать в массив array_clean elem и запомнить его индекс
-    // 3. Записать в массив array_clean все значения большие чем elem
+    array[avg] = array[end];
+    array[end] = pivot;
 
+    for ( ; array[tail] < array[end]; tail++);
+    for ( int i = tail + 1; i < end; i++ ) {
+        if ( array[i] < array[end] ) {
+            pivot = array[i];
+            array[i] = array[tail];
+            array[tail] = pivot;
+            tail += 1;
+        }
+    }
+    pivot = array[end];
+    array[end] = array[tail];
+    array[tail] = pivot;
 
-    return 0;
+    return tail;
+}
+
+void quickSort(int array[], int start, int end) {
+    if ( start >= end ) {
+        return;
+    }
+    int index = partition(array, start, end);
+
+    quickSort(array, start, index-1);
+    quickSort(array, index+1, end);
 }
 
 int main() {
     int array[10] = {5,9,7,3,6,1,4,8,2,10};
-    int array_clean[10];
 
-    int value = partition(array, array_clean, 0, 9);
-
-    printf("%d\n", value);
-    arrayPrint(array_clean, 10);
-
-    // 5
-    // 5 3 1 4 2 6 9 7 8 10
-
+    quickSort(array, 0, 9);
+    arrayPrint(array, 10);
 
     return 0;
 }
